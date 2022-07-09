@@ -1,6 +1,7 @@
 import pygame
 
 class Mouse(pygame.sprite.Sprite):
+    '''Helps defining custom mouse cursor image.'''
     def __init__(self, *groups) -> None:
         super().__init__(*groups)
 
@@ -25,7 +26,7 @@ class Mouse(pygame.sprite.Sprite):
     def set_image(self, img: str) -> None:
         '''The "img" parameter needs to be a valid path to an image file.'''
         try:
-            self.image = pygame.image.load(img)
+            self.image = pygame.image.load(img).convert()
         except:
             raise Exception("Invalid custom cursor image. Either the file format is not supported or the path is wrong.")
     

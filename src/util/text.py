@@ -32,9 +32,10 @@ class TextEngine:
         self.AA: bool = 1
         self.txt_surf: pygame.Surface = self.font.render(self.txt, self.AA, self.color, self.bg)
 
-    def set_txt(self, txt: str) -> None:
+    def set_txt(self, txt: str) -> str:
         self.txt = txt
         self.update_surf()
+        return self.txt
     
     def set_color(self, color: str) -> None:
         self.color = color
@@ -114,8 +115,11 @@ class TextEngine:
         surface.set_colorkey(ck)
 
         for word in words:
-            if word == " " or word == "\n":
+            if word == " ":
                 continue
+            elif word == "\n":
+                x = 0 + padding
+                y += (fheight + line_height)
                 
             fsurf = self.font.render(word, self.AA, self.color, self.bg)
 

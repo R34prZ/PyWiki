@@ -1,3 +1,4 @@
+
 import pygame
 
 class Button(pygame.sprite.Sprite):
@@ -15,6 +16,7 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.pos)
 
         self.hover: bool = False
+        self.click: bool = False
 
     def set_image(self, img: str) -> None:
         ''' Sets the image of the button. The "img" parameter needs to be a valid path to the image file.'''
@@ -44,7 +46,11 @@ class Button(pygame.sprite.Sprite):
     def action(self) -> None:
         '''Method to be overloaded with the action the button will perform.'''
         mpos = pygame.mouse.get_pos()
+
         if pygame.mouse.get_pressed()[0] and self.rect.collidepoint(*mpos):
+            self.click = True
+        elif self.click:
+            self.click = False
             print("Click click you pressed a button!")
 
     def update(self):

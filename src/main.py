@@ -38,6 +38,10 @@ class Main:
                 if event.type == QUIT:
                     pygame.quit()
                     exit()
+                elif event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        exit()
                 
             # draw
             self.btn_group.draw(self.display)

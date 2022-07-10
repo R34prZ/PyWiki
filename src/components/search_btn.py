@@ -7,5 +7,6 @@ class SearchButton(Button):
         self.color: str = "#65c27e"
     
     def update(self):
+        self.action()
         self.scale_on_hover()
         self.change_color_on_hover("#4fab67")

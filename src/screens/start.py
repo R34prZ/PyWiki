@@ -2,8 +2,10 @@
 
 import pygame
 from components.search_btn import SearchButton
+from components.search_input import SearchInput
 
 
 class Start:
     def __init__(self, *groups) -> None:
+        self.search_inp = SearchInput(400, 150, 200, 50, groups)
         self.search_btn = SearchButton(400, 300, 100, 50, groups)

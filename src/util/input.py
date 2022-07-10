@@ -1,4 +1,6 @@
+import ssl
 import pygame
+from util import text
 
 class Input(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int, w: int, h: int, *groups) -> None:
@@ -11,6 +13,7 @@ class Input(pygame.sprite.Sprite):
         self.rect: pygame.Rect = self.image.get_rect(center=self.pos)
 
         self.color: str = "#6448b5"
+        self.image.fill(self.color)
 
         self.placeholder: str = "Placeholder"
 

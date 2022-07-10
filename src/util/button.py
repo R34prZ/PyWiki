@@ -43,7 +43,9 @@ class Button(pygame.sprite.Sprite):
 
     def action(self) -> None:
         '''Method to be overloaded with the action the button will perform.'''
-        pass
+        mpos = pygame.mouse.get_pos()
+        if pygame.mouse.get_pressed()[0] and self.rect.collidepoint(*mpos):
+            print("Click click you pressed a button!")
 
     def update(self):
         pass

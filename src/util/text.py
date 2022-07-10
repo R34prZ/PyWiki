@@ -20,16 +20,17 @@ def render_text(txt: str, color: str = "#000000", font: str = "Arial", fsize: in
 
 
 class TextEngine:
-    ''''''
+    ''' Powerful various functionalities to render and format text with pygame.'''
     def __init__(self) -> None:
         self.txt: str = "Lorem Ipsum"
 
         self.fsize: int = 14
         self.font = pygame.font.SysFont("Arial", self.fsize)
 
-        self.color: str = "#000000"
+        self.color: str = "#1c1c1c"
+        self.bg: str = None
         self.AA: bool = 1
-        self.txt_surf: pygame.Surface = self.font.render(self.txt, self.AA, self.color)
+        self.txt_surf: pygame.Surface = self.font.render(self.txt, self.AA, self.color, self.bg)
 
     def set_txt(self, txt: str) -> None:
         self.txt = txt
@@ -40,49 +41,54 @@ class TextEngine:
         self.update_surf()
     
     def set_anti_aliasing(self, AA: bool) -> None:
+        '''Set wether to use anti aliasing to render the text or not.'''
         self.AA = AA
         self.update_surf()
     
-    def set_fsize(self, fsize: int) -> None:
+    def set_font(self, font: str = "Arial", fsize: int = 14) -> None:
+        '''Set the font and font size to use to render text.'''
         self.fsize = fsize
-        self.update_surf()
-    
-    def set_font(self, font: str) -> None:
+
         try:
-            self.font = pygame.font.Font(font, self.fsize)
+            self.font = pygame.font.Font(font, fsize)
         except:
-            self.font = pygame.font.SysFont(font, self.fsize)
+            self.font = pygame.font.SysFont(font, fsize)
         
         self.update_surf()
     
-    def set_all(self, txt: str, color: str, font: str, fsize: int, AA: bool) -> None:
+    def set_bg(self, color: str | tuple) -> None:
+        self.bg = color
+        self.update_surf()
+
+    def set_all(self, txt: str, color: str, font: str, fsize: int, AA: bool, bg: str | tuple) -> None:
         '''Shorhand to set all the atributes in one method.'''
         self.set_txt(txt)
         self.set_color(color)
-        self.set_font(font)
-        self.set_fsize(fsize)
+        self.set_bg(bg)
+        self.set_font(font, fsize)
         self.set_anti_aliasing(AA)
         self.update_surf()
 
+    def update_surf(self) -> None:
+        '''Updates the text surface after changing any value of the atributes.'''
+        self.txt_surf = self.font.render(self.txt, self.AA, self.color, self.bg)
+
     def load_from_file(self, file) -> list[str]:
-        '''Load text from a ".txt" file and store each line in a list entry in a variable. The "file" argument must be a valid path to a file.'''
+        '''Load text from a ".txt" file and store it in a variable. The "file" argument must be a valid path to a file.'''
         with open(file, "r") as f:
-            self.txt = f.readlines()
+            self.txt = f.read()
         
         return self.txt
 
-    def update_surf(self) -> None:
-        '''Updates the text surface after changing any value of the atributes.'''
-        self.txt_surf = self.font.render(self.txt, self.AA, self.color)
-
     def render(self) -> pygame.Surface:
+        '''Returns a pygame Surface with text rendered to it.'''
         self.update_surf()
         return self.txt_surf
 
     @staticmethod
     def render_new(txt: str, font:str, fsize: int, color: str, AA: bool) -> pygame.Surface:
         '''Does the same as render_text, but it's a static method of TextEngine, meaning it can be
-        used anywhere without initializing an object.'''
+        used anywhere TextEngine was imported, without initializing an object.'''
         try:
             font = pygame.font.Font(font, fsize)
         except:
@@ -92,5 +98,34 @@ class TextEngine:
 
         return fsurf
 
-    
+    def render_wrap(self, surf: pygame.Surface, padding: int = 3, line_height: int = 3,ck: tuple | str = (0, 0, 0)) -> pygame.Surface:
+        '''Renders text to a pygame Surface, but break a line if the text width is greater than 
+        the surface informed width. The "ck" parameter stands for colorkey and should never be the same 
+        color as the font, as this will result in the text being invisible. Padding will
+        only be aplied in the sides, while the top and each line will consider the font and line height.'''
 
+        words: list[str] = self.txt.split(' ')
+
+        fheight = self.font.get_height()
+        x, y = 0 + padding, fheight + line_height
+
+        surface = surf.copy()
+        surface.fill(ck)
+        surface.set_colorkey(ck)
+
+        for word in words:
+            if word == " " or word == "\n":
+                continue
+                
+            fsurf = self.font.render(word, self.AA, self.color, self.bg)
+
+            # checks if x is greater than the surface width subtracted from the padding and break a line
+            if x >= (surface.get_width() - padding) or (x + fsurf.get_width()) > surface.get_width() - padding:
+                x = 0 + padding
+                y += (fheight + line_height)
+
+            surface.blit(fsurf, (x, y))
+            x += fsurf.get_width()
+        
+
+        return surface

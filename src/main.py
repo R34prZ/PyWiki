@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 
 from screens.start import Start
+from util.input_group import InpGroup
 
 pygame.init()
 
@@ -26,7 +27,8 @@ class Main:
         self.bg_color: str = "#fdfdfd"  
 
         self.btn_group = pygame.sprite.Group()
-        self.start_scrn = Start(self.btn_group)
+        self.inp_group = InpGroup()
+        self.start_scrn = Start(self.inp_group, self.btn_group)
 
     def run(self) -> None:
         while self.running:
@@ -42,10 +44,16 @@ class Main:
                     if event.key == K_ESCAPE:
                         pygame.quit()
                         exit()
+
+                    self.inp_group.handle_input(event.key)
+                   
                 
             # draw
             self.btn_group.draw(self.display)
             self.btn_group.update()
+
+            self.inp_group.draw(self.display)
+            self.inp_group.update()
 
             # update
             pygame.display.flip()

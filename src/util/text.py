@@ -27,7 +27,7 @@ class TextEngine:
         self.fsize: int = 14
         self.font = pygame.font.SysFont("Arial", self.fsize)
 
-        self.color: str = "#1c1c1c"
+        self.color: str = "#c1c1c1"
         self.bg: str = None
         self.AA: bool = 1
         self.txt_surf: pygame.Surface = self.font.render(self.txt, self.AA, self.color, self.bg)
@@ -69,6 +69,9 @@ class TextEngine:
         self.set_font(font, fsize)
         self.set_anti_aliasing(AA)
         self.update_surf()
+
+    def get_txtcolor(self) -> str | tuple:
+        return self.color
 
     def update_surf(self) -> None:
         '''Updates the text surface after changing any value of the atributes.'''

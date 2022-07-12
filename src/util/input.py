@@ -94,7 +94,7 @@ class Input(pygame.sprite.Sprite):
         img_copy.blit(txt_surf, (self.rect.width / 2 - txt_surf.get_width() / 2, self.rect.height / 2 - txt_surf.get_height() / 2))
         self.image = img_copy
 
-    def get_input(self, key) -> str:
+    def get_input(self, key) -> None:
         '''Gets the pressed key events, handle it and convert it to text on the input.'''
         if self.focused:
             # converts the key pressed into text inside the input
@@ -149,7 +149,6 @@ class Input(pygame.sprite.Sprite):
 
         self.set_text(self.entry_txt, self.txt_manager.get_txtcolor())
         print("TIP: You can press TAB to clear the input.")
-        return self.text
 
     def clear_input(self) -> None: 
         '''Clears the input text.'''

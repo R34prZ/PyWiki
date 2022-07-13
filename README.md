@@ -41,3 +41,5 @@ I recommend using at least python `3.10`, as `match case` is needed (otherwise y
  - [ ] Option to save results locally
  
 ###### OBS:  The command instructions above work on linux and are not tested on Windows, though it should work, i'm not sure.
+  
+##### [R34prZ](https://github.com/R34prZ)

@@ -151,6 +151,9 @@ class Input(pygame.sprite.Sprite):
         self.set_text(self.entry_txt, self.txt_manager.get_txtcolor())
         print("TIP: You can press TAB to clear the input.")
 
+    def get_value(self) -> str:
+        return self.text
+
     def clear_input(self) -> None: 
         '''Clears the input text.'''
         self.entry_txt = ""

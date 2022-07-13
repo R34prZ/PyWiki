@@ -73,6 +73,9 @@ class TextEngine:
     def get_txtcolor(self) -> str | tuple:
         return self.color
 
+    def get_txt(self) -> str:
+        return self.txt
+
     def update_surf(self) -> None:
         '''Updates the text surface after changing any value of the atributes.'''
         self.txt_surf = self.font.render(self.txt, self.AA, self.color, self.bg)
@@ -102,7 +105,7 @@ class TextEngine:
 
         return fsurf
 
-    def render_wrap(self, surf: pygame.Surface, padding: int = 3, line_height: int = 3,ck: tuple | str = (0, 0, 0)) -> pygame.Surface:
+    def render_wrap(self, surf: pygame.Surface, padding: int = 3, line_height: int = 3, ck: tuple | str = (0, 0, 0)) -> pygame.Surface:
         '''Renders text to a pygame Surface, but break a line if the text width is greater than 
         the surface informed width. The "ck" parameter stands for colorkey and should never be the same 
         color as the font, as this will result in the text being invisible. Padding will
@@ -116,7 +119,7 @@ class TextEngine:
         surface = surf.copy()
         surface.fill(ck)
         surface.set_colorkey(ck)
-
+        
         for word in words:
             if word == " ":
                 continue
@@ -132,7 +135,8 @@ class TextEngine:
                 y += (fheight + line_height)
 
             surface.blit(fsurf, (x, y))
-            x += fsurf.get_width()
+            # add the width of "a" in the current font to each blank space
+            x += fsurf.get_width() + self.font.size("a")[0]
         
 
         return surface

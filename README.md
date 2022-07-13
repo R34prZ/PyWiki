@@ -21,8 +21,10 @@ I recommend using at least python `3.10`, as `match case` is needed (otherwise y
 ### TODO
 ---
  - [x] Text input for search
- - [ ] Link the wikipedia search function to the search button
- - [ ] Get the wikipedia search result and display it
+ - [X] Link the wikipedia search function to the search button
+ - [X] Get the wikipedia search result and display it
+ - [ ] Better process search
+ - [ ] Display multiple options on ambigue cases
  - [ ] Option to favorite results
  - [ ] Option to save results locally
  

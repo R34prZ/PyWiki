@@ -22,7 +22,7 @@ You can run PyWiki with **python3**. I recommend using a virtual environment wit
 > -- requirements.txt  
   
 > Activate the virtual environment with `source env/bin/activate`.  
-> Download the requirements with pip (see the Requirements section).  
+> Download the requirements with `pip` (see the Requirements section).  
 > Then run `python3 ./src/main.py`.  
 > Once done, you can leave the virtual environment with `deactivate`.  
 

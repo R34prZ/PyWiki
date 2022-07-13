@@ -22,12 +22,13 @@ You can run PyWiki with **python3**. I recommend using a virtual environment wit
 > -- requirements.txt  
   
 > Activate the virtual environment with `source env/bin/activate`.  
+> Download the requirements with pip (see the Requirements section).  
 > Then run `python3 ./src/main.py`.  
 > Once done, you can leave the virtual environment with `deactivate`.  
 
 ## Requirements
 The requirements can be found in [here](./requirements.txt). You can download them with **pip** using `python3 -m pip install -r requirements.txt`.  
-I recommend using at least python `3.10`, as `match case` is needed (otherwise you will need to change the all the `match` structures to traditional `if` statements).
+I recommend using at least python `3.10`, as `match case` is needed (otherwise you will need to change all the `match` structures to traditional `if` statements).
 
 ### TODO
 ---

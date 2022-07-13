@@ -43,16 +43,13 @@ class Button(pygame.sprite.Sprite):
         self.image = img_copy
 
     def scale_on_hover(self, scale_factor: float = 1.2) -> None:
-        mpos = pygame.mouse.get_pos()
-        
-        if self.rect.collidepoint(*mpos):
+        '''Scale the button when it's hovered by the cursor. Goes on "update" method.'''
+        if self.hover:
             self.image = pygame.transform.smoothscale(self.img_copy, self.size * scale_factor)
             self.rect = self.image.get_rect(center=self.pos)
-            self.hover = True
         else: 
             self.image = pygame.transform.smoothscale(self.img_copy, self.size)
             self.rect = self.image.get_rect(center=self.pos)
-            self.hover = False
 
     def change_color_on_hover(self, color: str) -> None:
         if self.hover:
@@ -78,16 +75,31 @@ class Button(pygame.sprite.Sprite):
         '''Updates the input surface (self.image).'''
         # self.set_alpha(self.alpha)
         self.set_text(self.text, self.txt_manager.color)
+    
+    def check_hover(self) -> bool:
+        '''Checks if the button is being hovered by the cursor. Goes on "update" method.'''
+        mpos = pygame.mouse.get_pos()
+        
+        if self.rect.collidepoint(*mpos):
+            self.hover = True
+        else:
+            self.hover = False
+    
+    def check_click(self, button) -> bool:
+        '''Checks if the button is being clicked by the cursor. Goes on the event loop under
+        MOUSEBUTTONUP event and gets "event.button". It's necessary to reset "self.click" to false
+        somewhere after the action, you can do it on on the "update" method or in the "action" method.'''
+
+        if button == 1 and self.hover:
+            self.click = True
+        
+        return self.click
 
     def action(self) -> None:
         '''Method to be overloaded with the action the button will perform.'''
-        mpos = pygame.mouse.get_pos()
-
-        if pygame.mouse.get_pressed()[0] and self.rect.collidepoint(*mpos):
-            self.click = True
-        elif self.click:
+        if self.click:
+            print("Click click that's a button!")
             self.click = False
-            print("Click click you pressed a button!")
 
     def update(self):
         pass

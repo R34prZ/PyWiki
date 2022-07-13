@@ -38,7 +38,7 @@ class Input(pygame.sprite.Sprite):
             raise Exception("It was not possible to change the input image. Check the path or the file extension.")
     
     def draw_bordered(self, radius: int = 50) -> None:
-        '''Draws the input with rounded borders.'''
+        '''Draws the input with rounded borders. Goes on "update" method.'''
         img_copy = self.image.copy()
         img_copy.fill("#000000")
         img_copy.set_colorkey("#000000")
@@ -50,7 +50,8 @@ class Input(pygame.sprite.Sprite):
         self.update_surf()
     
     def focus(self, bcolor: str = "#8f3af0", width: int = 3) -> None:
-        '''Draws a border into the input if it got focus (got clicked or hovered).'''
+        '''Draws a border into the input if it got focus (got clicked or hovered).
+        Goes on "update" method.'''
         mpos = pygame.mouse.get_pos()
         img_copy = self.image.copy()
 
@@ -68,7 +69,6 @@ class Input(pygame.sprite.Sprite):
             pygame.draw.rect(img_copy, bcolor, (0, 0, *self.rect.size), width, self.border_radius)
             self.image = img_copy
 
-        
     def update_surf(self) -> None:
         '''Updates the input surface (self.image).'''
         # self.set_alpha(self.alpha)
@@ -95,7 +95,8 @@ class Input(pygame.sprite.Sprite):
         self.image = img_copy
 
     def get_input(self, key) -> None:
-        '''Gets the pressed key events, handle it and convert it to text on the input.'''
+        '''Gets the pressed key events, handle it and convert it to text on the input.
+        Goes on the event loop, under event.KEYDOWN'''
         if self.focused:
             # converts the key pressed into text inside the input
             match key:
@@ -155,7 +156,8 @@ class Input(pygame.sprite.Sprite):
         self.entry_txt = ""
     
     def reset_input(self) -> None:
-        '''Resets the input and writes the placeholder if there's not text and the input is not focused.'''
+        '''Resets the input and writes the placeholder if there's not text and the input is not focused.
+        Goes on "update" method.'''
         if len(self.text) == 0 and not self.focused:
             self.set_text(self.placeholder, self.txt_manager.get_txtcolor())
 

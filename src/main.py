@@ -3,8 +3,9 @@ import wikipedia
 import pygame
 from pygame.locals import *
 
-from screens.start import Start
+from screens.start import StartPage
 from util.input_group import InpGroup
+from util.button_group import BtnGroup
 
 pygame.init()
 
@@ -26,9 +27,9 @@ class Main:
 
         self.bg_color: str = "#fdfdfd"  
 
-        self.btn_group = pygame.sprite.Group()
+        self.btn_group = BtnGroup()
         self.inp_group = InpGroup()
-        self.start_scrn = Start(self.inp_group, self.btn_group)
+        self.start_scrn = StartPage(self.inp_group, self.btn_group)
 
     def run(self) -> None:
         while self.running:
@@ -46,16 +47,22 @@ class Main:
                         exit()
 
                     self.inp_group.handle_input(event.key)
+
+                elif event.type == MOUSEBUTTONUP:
+                    self.btn_group.get_click(event.button)
+                
+                elif event.type == pygame.USEREVENT + 1:
+                    print("clicked")
                    
                 
             # draw
             self.btn_group.draw(self.display)
-            self.btn_group.update()
-
             self.inp_group.draw(self.display)
+            
+            # update
+            self.btn_group.update()
             self.inp_group.update()
 
-            # update
             pygame.display.flip()
             self._clock.tick(self._FPS)
 

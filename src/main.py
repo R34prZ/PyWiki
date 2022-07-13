@@ -4,6 +4,8 @@ import pygame
 from pygame.locals import *
 
 from screens.start import StartPage
+from screens.search import SearchPage
+
 from util.input_group import InpGroup
 from util.button_group import BtnGroup
 
@@ -29,7 +31,9 @@ class Main:
 
         self.btn_group = BtnGroup()
         self.inp_group = InpGroup()
+
         self.start_scrn = StartPage(self.inp_group, self.btn_group)
+        self.search_scrn = SearchPage()
 
     def run(self) -> None:
         while self.running:
@@ -52,12 +56,17 @@ class Main:
                     self.btn_group.get_click(event.button)
                 
                 elif event.type == pygame.USEREVENT + 1:
-                    print("clicked")
+                    print("searching...")
+                    self.search_scrn.search(self.start_scrn.get_search_value())
                    
                 
             # draw
             self.btn_group.draw(self.display)
             self.inp_group.draw(self.display)
+
+            if self.search_scrn.get_status():
+                self.display.blit(self.search_scrn.get_result(), (0, 0))
+
             
             # update
             self.btn_group.update()

@@ -9,3 +9,6 @@ class StartPage:
     def __init__(self, *groups) -> None:
         self.search_inp = SearchInput(400, 150, 550, 50, groups[0])
         self.search_btn = SearchButton(400, 300, 150, 50, groups[1])
+    
+    def get_search_value(self) -> str:
+        return self.search_inp.get_value()

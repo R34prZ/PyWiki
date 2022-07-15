@@ -28,7 +28,11 @@ class Button(pygame.sprite.Sprite):
     def set_image(self, img: str) -> None:
         ''' Sets the image of the button. The "img" parameter needs to be a valid path to the image file.'''
         try:
-            self.image = pygame.image.load(img).convert()
+            self.image = pygame.image.load(img)
+            self.image.convert()
+            self.img_copy = self.image.copy()
+            self.rect = self.image.get_rect(center=self.pos)
+            self.size = pygame.Vector2(self.rect.width, self.rect.height)
         except:
             raise Exception("It was not possible to change the button image. Check the path or the file extension.")
     

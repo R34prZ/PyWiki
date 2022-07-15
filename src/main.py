@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+
+"""main.py: the main function, run this to launch the program."""
+
+__author__ = "R34prZ"
+
 
 import threading
 
@@ -65,7 +71,6 @@ class Main:
                     self.actual_screen = "search"
                     # starts another thread, so the program wont entirely stop while searching
                     threading.Thread(target=self.search_scrn.search, args=(self.start_scrn.get_search_value(),)).start()
-
                    
             # draw
             if self.actual_screen == "start":
@@ -83,7 +88,7 @@ class Main:
 
             
             # update
-            # TODO fix the buttons being clickable on other screen
+            # TODO fix the buttons being clickable on other screens
             self.btn_group.update()
             self.back_btn_group.update()
             self.inp_group.update()

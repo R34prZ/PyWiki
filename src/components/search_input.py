@@ -1,4 +1,4 @@
-import pygame
+
 from util.input import Input
 
 class SearchInput(Input):
@@ -6,6 +6,11 @@ class SearchInput(Input):
         super().__init__(x, y, w, h, *groups)
         self.set_alpha(200)
         self.set_text(self.placeholder, self.txt_manager.get_txtcolor())
+
+    def get_value(self) -> str:
+        if self.text != self.placeholder:
+            return self.text
+        return "Pygame"
     
     def update(self) -> None:
         self.draw_bordered()

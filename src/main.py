@@ -1,5 +1,6 @@
 
-import wikipedia
+import threading
+
 import pygame
 from pygame.locals import *
 
@@ -31,9 +32,12 @@ class Main:
 
         self.btn_group = BtnGroup()
         self.inp_group = InpGroup()
+        self.back_btn_group = BtnGroup()
 
         self.start_scrn = StartPage(self.inp_group, self.btn_group)
-        self.search_scrn = SearchPage()
+        self.search_scrn = SearchPage(self.back_btn_group)
+
+        self.actual_screen: str = "start"
 
     def run(self) -> None:
         while self.running:
@@ -54,31 +58,39 @@ class Main:
 
                 elif event.type == MOUSEBUTTONUP:
                     self.btn_group.get_click(event.button)
+                    self.back_btn_group.get_click(event.button)
                 
                 elif event.type == pygame.USEREVENT + 1:
                     print("searching...")
-                    self.search_scrn.search(self.start_scrn.get_search_value())
-                   
-                
-            # draw
-            self.btn_group.draw(self.display)
-            self.inp_group.draw(self.display)
+                    self.actual_screen = "search"
+                    # starts another thread, so the program wont entirely stop while searching
+                    threading.Thread(target=self.search_scrn.search, args=(self.start_scrn.get_search_value(),)).start()
 
-            if self.search_scrn.get_status():
-                self.display.blit(self.search_scrn.get_result(), (0, 0))
+                   
+            # draw
+            if self.actual_screen == "start":
+                self.btn_group.draw(self.display)
+                self.inp_group.draw(self.display)
+
+            elif self.actual_screen == "search":
+                if self.search_scrn.get_status():
+                    self.display.blit(self.search_scrn.get_result(), (0, 0))
+                if self.search_scrn.go_back():
+                    self.search_scrn.reset_search()
+                    self.actual_screen = "start"
+
+                self.back_btn_group.draw(self.display)
 
             
             # update
+            # TODO fix the buttons being clickable on other screen
             self.btn_group.update()
+            self.back_btn_group.update()
             self.inp_group.update()
 
             pygame.display.flip()
-            self._clock.tick(self._FPS)
+            self._clock.tick() # won't cap FPS for now
 
 if __name__ == "__main__":
     main = Main()
     main.run()
-
-
-
-        

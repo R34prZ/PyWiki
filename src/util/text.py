@@ -93,7 +93,7 @@ class TextEngine:
         return self.txt_surf
 
     @staticmethod
-    def render_new(txt: str, font:str, fsize: int, color: str, AA: bool) -> pygame.Surface:
+    def render_new(txt: str, font:str = "Arial", fsize: int = 14, color: str = "#1c1c1c", AA: bool = 1) -> pygame.Surface:
         '''Does the same as render_text, but it's a static method of TextEngine, meaning it can be
         used anywhere TextEngine was imported, without initializing an object.'''
         try:

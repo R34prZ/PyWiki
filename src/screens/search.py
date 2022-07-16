@@ -30,12 +30,16 @@ class SearchPage:
             self.search_text = wikipedia.summary(txt)
             self.search_done = True
             return True
+        except wikipedia.exceptions.DisambiguationError:
+            self.txt_manager.set_txt(f'"{txt}" may refer to more than one result. Be more specific.')
+        except wikipedia.exceptions.PageError:
+            self.txt_manager.set_txt(f'{txt} does not match any wikipedia page.')
         except:
-            # right now the error message is not displayed because it only displays when self.search_done is true
-            self.txt_manager.set_txt("Couldn't make the search!")
-            print("The search was not successfull.")
-            self.search_done = False
-            return False
+            self.txt_manager.set_txt("The search was not successful.")
+        
+        print("The search was not successfull.")
+        self.search_done = False
+        return False
     
     def __show_search(self, status: bool) -> None:
         if status:
@@ -57,14 +61,23 @@ class SearchPage:
             self.txt_manager.set_font(fsize=16)
             search_surf = self.txt_manager.render_wrap(self.txt_surf, 25)
             self.txt_surf.blit(search_surf, (0, 50))
-        else:
-            # in case the search is not successful
-            error_surf = self.txt_manager.render()
-            self.txt_surf.blit(error_surf, (self.txt_surf.get_width() / 2 - error_surf.get_width() / 2, 
-            self.txt_surf.get_height() / 2 - error_surf.get_height() / 2))
+
+    def display_error(self, display: pygame.Surface) -> None:
+        '''In case the search is not successful, shows a generic error message.
+        The message is defined at "__check_search" method.'''
+        self.txt_manager.set_font(fsize=24)
+        error_surf = self.txt_manager.render()
+        display.blit(error_surf, (display.get_width() / 2 - error_surf.get_width() / 2, 
+        display.get_height() / 2 - error_surf.get_height() / 2))
+
+    def display_loading(self, display: pygame.Surface) -> None:
+        '''Displays a generic loading message.'''
+        load_surf = self.txt_manager.render_new("searching...", fsize=24)
+        display.blit(load_surf, (display.get_width() / 2 - load_surf.get_width() / 2, 
+            display.get_height() / 2 - load_surf.get_height() / 2))
 
     def search(self, txt: str) -> None:
-        search_status = self.__check_search(txt)
+        search_status: bool = self.__check_search(txt)
         self.__show_search(search_status)
 
         print("Search done.")
@@ -72,12 +85,15 @@ class SearchPage:
     def close_search(self) -> None:
         self.search_done = False
 
+    def update_surface(self) -> None:
+        self.txt_surf.fill(self.color)
+
     def reset_search(self) -> None:
         '''Resets the search parameters.'''
         self.txt_manager.set_txt("")
         self.search_text = ""
         self.close_search()
-        self.txt_surf.fill(self.color)
+        self.update_surface()
 
     def get_status(self) -> bool:
         return self.search_done        

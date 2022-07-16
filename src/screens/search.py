@@ -31,6 +31,7 @@ class SearchPage:
             self.search_done = True
             return True
         except:
+            # right now the error message is not displayed because it only displays when self.search_done is true
             self.txt_manager.set_txt("Couldn't make the search!")
             print("The search was not successfull.")
             self.search_done = False
@@ -38,7 +39,6 @@ class SearchPage:
     
     def __show_search(self, status: bool) -> None:
         if status:
-            # TODO: make it so this part only runs after check search is done
             # TODO: make it possible to scroll if the text is to big
             # sets the title
             self.txt_manager.set_txt(self.search_page.title)
@@ -58,10 +58,10 @@ class SearchPage:
             search_surf = self.txt_manager.render_wrap(self.txt_surf, 25)
             self.txt_surf.blit(search_surf, (0, 50))
         else:
+            # in case the search is not successful
             error_surf = self.txt_manager.render()
             self.txt_surf.blit(error_surf, (self.txt_surf.get_width() / 2 - error_surf.get_width() / 2, 
             self.txt_surf.get_height() / 2 - error_surf.get_height() / 2))
-
 
     def search(self, txt: str) -> None:
         search_status = self.__check_search(txt)

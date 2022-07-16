@@ -35,10 +35,10 @@ I recommend using at least python `3.10`, as `match case` is needed (otherwise y
  - [x] Text input for search
  - [X] Link the wikipedia search function to the search button
  - [X] Get the wikipedia search result and display it
- - [ ] Better process search
- - [ ] Display multiple options on ambigue cases
+ - [X] Better process search
  - [ ] Option to favorite results
  - [ ] Option to save results locally
+ - [ ] Language selection
  
 ###### OBS:  The command instructions above work on linux and are not tested on Windows, though it should work, i'm not sure.
   

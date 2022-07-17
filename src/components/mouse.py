@@ -1,3 +1,6 @@
+
+"""Allows the change of the cursor within a pygame window."""
+
 import pygame
 
 class Mouse(pygame.sprite.Sprite):

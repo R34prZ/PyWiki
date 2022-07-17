@@ -21,6 +21,13 @@ def render_text(txt: str, color: str = "#000000", font: str = "Arial", fsize: in
 
 class TextEngine:
     ''' Powerful various functionalities to render and format text with pygame.'''
+
+    FONT: str = "Arial"
+    FONT_SIZE: int = 14
+    FONT_COLOR: str = "#1c1c1c"
+
+    SCROLL_Y: int = 0
+
     def __init__(self) -> None:
         self.txt: str = "Lorem Ipsum"
 
@@ -140,3 +147,25 @@ class TextEngine:
         
 
         return surface
+
+    @classmethod
+    def scroll(cls, txt_surf: pygame.Surface, display: pygame.Surface, max_scroll: int) -> None:
+        """ Permits to scroll the text if it's content is greater than the target display height.
+        This will blit "txt_surf" to "display" and control the scroll of the surface."""
+        txt_rect = txt_surf.get_rect()
+        txt_height, display_height = txt_rect.height, display.get_height()
+
+
+        if txt_height > display_height:
+            if pygame.key.get_pressed()[pygame.K_UP]:
+               cls.SCROLL_Y += 2
+            elif pygame.key.get_pressed()[pygame.K_DOWN]:
+                cls.SCROLL_Y -= 2
+        
+        if cls.SCROLL_Y >= 0:
+            cls.SCROLL_Y = 0
+        elif cls.SCROLL_Y <= max_scroll:
+            cls.SCROLL_Y = max_scroll
+
+        display.blit(txt_surf, (0, cls.SCROLL_Y))
+

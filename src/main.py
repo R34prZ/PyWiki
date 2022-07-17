@@ -15,6 +15,7 @@ from screens.search import SearchPage
 
 from util.input_group import InpGroup
 from util.button_group import BtnGroup
+from util.text import TextEngine
 
 pygame.init()
 
@@ -71,6 +72,7 @@ class Main:
                     self.actual_screen = "search"
                     print("Starting thread to search...")
                     # starts another thread, so the program wont entirely stop while searching
+                    self.search_scrn.start_loading()
                     if threading.active_count() == 1:
                         threading.Thread(target=self.search_scrn.search, args=(self.start_scrn.get_search_value(),)).start()
                     print(f"Active threads: {threading.active_count()}")
@@ -79,13 +81,16 @@ class Main:
             if self.actual_screen == "start":
                 self.btn_group.draw(self.display)
                 self.inp_group.draw(self.display)
+                self.start_scrn.display_tip(self.display)
 
             elif self.actual_screen == "search":
-                self.search_scrn.display_loading(self.display)
+                # display "searching" message before getting the result
+                if self.search_scrn.get_loading():
+                    self.search_scrn.display_loading(self.display)
     
                 # if the search was successful, get the it and display it
                 if self.search_scrn.get_status():
-                    self.display.blit(self.search_scrn.get_result(), (0, 0))
+                    TextEngine.scroll(self.search_scrn.get_result(), self.display, -600)
                 elif not self.search_scrn.get_status() and threading.active_count() == 1:
                     self.search_scrn.update_surface()
                     self.search_scrn.display_error(self.display)
@@ -95,7 +100,7 @@ class Main:
                     self.actual_screen = "start"
                 
                 self.back_btn_group.draw(self.display)
-
+                
             # update
             # TODO fix the buttons being clickable on other screens
             self.btn_group.update()

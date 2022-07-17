@@ -1,6 +1,5 @@
+""" Base input class with various methods to help creating custom inputs. """
 
-from cmath import rect
-import re
 import pygame
 from util.text import TextEngine
 
@@ -149,7 +148,6 @@ class Input(pygame.sprite.Sprite):
                 case _: print("Key not recognized!")
 
         self.set_text(self.entry_txt, self.txt_manager.get_txtcolor())
-        print("TIP: You can press TAB to clear the input.")
 
     def get_value(self) -> str:
         return self.text

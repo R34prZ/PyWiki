@@ -157,10 +157,16 @@ class TextEngine:
 
 
         if txt_height > display_height:
+            # page scroll with key events
             if pygame.key.get_pressed()[pygame.K_UP]:
                cls.SCROLL_Y += 2
             elif pygame.key.get_pressed()[pygame.K_DOWN]:
                 cls.SCROLL_Y -= 2
+            
+            if pygame.key.get_pressed()[pygame.K_PAGEUP]:
+                cls.SCROLL_Y = 0
+            elif pygame.key.get_pressed()[pygame.K_PAGEDOWN]:
+                cls.SCROLL_Y = max_scroll
         
         if cls.SCROLL_Y >= 0:
             cls.SCROLL_Y = 0

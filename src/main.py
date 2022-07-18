@@ -5,6 +5,7 @@
 __author__ = "R34prZ"
 
 
+from calendar import MONDAY
 import threading
 
 import pygame
@@ -28,7 +29,7 @@ class Main:
         self.size: int = (self.WIDTH, self.HEIGHT)
 
         self.display: pygame.Surface = pygame.display.set_mode(self.size, 0, 32)
-        pygame.display.set_caption(self.NAME)
+        self.set_caption(self.NAME)
 
         self._clock = pygame.time.Clock()
         self._FPS: float = 60
@@ -46,60 +47,80 @@ class Main:
 
         self.actual_screen: str = "start"
 
+    def set_caption(self, caption: str) -> None:
+        pygame.display.set_caption(caption)
+
+    def handle_events(self) -> None:
+        """ Handle all the events. """
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    exit()
+
+                self.inp_group.handle_input(event.key)
+            
+            elif event.type == MOUSEBUTTONDOWN:
+                # page scroll with mouse events
+                if event.button == 4: TextEngine.SCROLL_Y += 50
+                elif event.button == 5: TextEngine.SCROLL_Y -= 50
+
+            elif event.type == MOUSEBUTTONUP:
+                self.btn_group.get_click(event.button)
+                self.back_btn_group.get_click(event.button)
+            
+            elif event.type == pygame.USEREVENT + 1:
+                print("searching...")
+                self.actual_screen = "search"
+                print("Starting thread to search...")
+                # starts another thread, so the program wont entirely stop while searching
+                self.search_scrn.start_loading()
+                if threading.active_count() == 1:
+                    threading.Thread(target=self.search_scrn.search, args=(
+                        self.start_scrn.get_search_value(),)).start()
+
+                    print(f"Active threads: {threading.active_count()}")
+
+    def draw(self) -> None:
+        """ Draws everything to the screen."""
+        if self.actual_screen == "start":
+            self.btn_group.draw(self.display)
+            self.inp_group.draw(self.display)
+            self.start_scrn.display_tip(self.display)
+
+        elif self.actual_screen == "search":
+            # display "searching" message before getting the result
+            if self.search_scrn.get_loading():
+                self.search_scrn.display_loading(self.display)
+                self.set_caption(f"{self.NAME} | searching...")
+            
+            # if the search was successful, get the it and display it
+            if self.search_scrn.get_status():
+                TextEngine.scroll(self.search_scrn.get_result(), self.display, -600)
+                self.set_caption(f"{self.NAME} | {self.start_scrn.get_search_value()}")
+            elif not self.search_scrn.get_status() and threading.active_count() == 1:
+                self.search_scrn.update_surface()
+                self.search_scrn.display_error(self.display)
+
+            if self.search_scrn.go_back():
+                self.search_scrn.reset_search()
+                self.actual_screen = "start"
+            
+            self.back_btn_group.draw(self.display)
+
     def run(self) -> None:
         while self.running:
 
             self.display.fill(self.bg_color)
 
             # events
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                    exit()
-                elif event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
-                        pygame.quit()
-                        exit()
-
-                    self.inp_group.handle_input(event.key)
-
-                elif event.type == MOUSEBUTTONUP:
-                    self.btn_group.get_click(event.button)
-                    self.back_btn_group.get_click(event.button)
-                
-                elif event.type == pygame.USEREVENT + 1:
-                    print("searching...")
-                    self.actual_screen = "search"
-                    print("Starting thread to search...")
-                    # starts another thread, so the program wont entirely stop while searching
-                    self.search_scrn.start_loading()
-                    if threading.active_count() == 1:
-                        threading.Thread(target=self.search_scrn.search, args=(self.start_scrn.get_search_value(),)).start()
-                    print(f"Active threads: {threading.active_count()}")
+            self.handle_events()
                    
             # draw
-            if self.actual_screen == "start":
-                self.btn_group.draw(self.display)
-                self.inp_group.draw(self.display)
-                self.start_scrn.display_tip(self.display)
-
-            elif self.actual_screen == "search":
-                # display "searching" message before getting the result
-                if self.search_scrn.get_loading():
-                    self.search_scrn.display_loading(self.display)
-    
-                # if the search was successful, get the it and display it
-                if self.search_scrn.get_status():
-                    TextEngine.scroll(self.search_scrn.get_result(), self.display, -600)
-                elif not self.search_scrn.get_status() and threading.active_count() == 1:
-                    self.search_scrn.update_surface()
-                    self.search_scrn.display_error(self.display)
-
-                if self.search_scrn.go_back():
-                    self.search_scrn.reset_search()
-                    self.actual_screen = "start"
-                
-                self.back_btn_group.draw(self.display)
+            self.draw()
                 
             # update
             # TODO fix the buttons being clickable on other screens
@@ -107,9 +128,9 @@ class Main:
             self.inp_group.update()
 
             self.back_btn_group.update()
-
+    
             pygame.display.flip()
-            self._clock.tick() # won't cap FPS for now
+            self._clock.tick(120)
 
 if __name__ == "__main__":
     main = Main()

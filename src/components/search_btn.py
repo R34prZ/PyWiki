@@ -4,8 +4,10 @@ from util.button import Button
 
 
 class SearchButton(Button):
-    search_event = pygame.USEREVENT + 1
-    SEARCH_WIKIPEDIA = pygame.event.Event(search_event)
+    
+    __search_event = pygame.USEREVENT + 1
+    SEARCH_WIKIPEDIA = pygame.event.Event(__search_event)
+
     def __init__(self, x: int, y: int, w: float, h: float, *groups) -> None:
         super().__init__(x, y, w, h, groups)
         self.color: str = "#65c27e"

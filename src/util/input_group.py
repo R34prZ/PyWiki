@@ -1,6 +1,7 @@
 import pygame
 
 class InpGroup(pygame.sprite.Group):
+    """ Creates a pygame group with special methods for inputs. """
     def __init__(self) -> None:
         super().__init__()
 

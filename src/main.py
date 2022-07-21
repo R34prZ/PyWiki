@@ -5,7 +5,6 @@
 __author__ = "R34prZ"
 
 
-from calendar import MONDAY
 import threading
 
 import pygame
@@ -13,9 +12,10 @@ from pygame.locals import *
 
 from screens.start import StartPage
 from screens.search import SearchPage
+from screens.bookmarks import BookmarkPage
 
 from util.input_group import InpGroup
-from util.button_group import BtnGroup
+from util.button_group import BtnGroup, BtnGroupSingle
 from util.text import TextEngine
 
 pygame.init()
@@ -41,9 +41,11 @@ class Main:
         self.btn_group = BtnGroup()
         self.inp_group = InpGroup()
         self.back_btn_group = BtnGroup()
+        self.bookmarks_group = BtnGroup()
 
         self.start_scrn = StartPage(self.inp_group, self.btn_group)
-        self.search_scrn = SearchPage(self.back_btn_group)
+        self.search_scrn = SearchPage(self.back_btn_group, self.bookmarks_group)
+        self.bookmark_scrn = BookmarkPage(self.back_btn_group)
 
         self.actual_screen: str = "start"
 
@@ -60,19 +62,24 @@ class Main:
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     exit()
-
+            
+                # handle typing on input
                 self.inp_group.handle_input(event.key)
             
+            # handle scroll event
             elif event.type == MOUSEBUTTONDOWN:
                 # page scroll with mouse events
                 if event.button == 4: TextEngine.SCROLL_Y += 50
                 elif event.button == 5: TextEngine.SCROLL_Y -= 50
 
+            # handle click event
             elif event.type == MOUSEBUTTONUP:
                 self.btn_group.get_click(event.button)
                 self.back_btn_group.get_click(event.button)
+                self.bookmarks_group.get_click(event.button)
             
-            elif event.type == pygame.USEREVENT + 1:
+            # handles the SEARCH_WIKIPEDIA event
+            elif event.type == USEREVENT + 1:
                 print("searching...")
                 self.actual_screen = "search"
                 print("Starting thread to search...")
@@ -83,6 +90,11 @@ class Main:
                         self.start_scrn.get_search_value(),)).start()
 
                     print(f"Active threads: {threading.active_count()}")
+            
+            # handles the GO_TO_BOOKMARKS event
+            elif event.type == USEREVENT + 2:
+                self.actual_screen = "bookmarks"
+                print("Going to bookmarks...")
 
     def draw(self) -> None:
         """ Draws everything to the screen."""
@@ -102,6 +114,8 @@ class Main:
             if self.search_scrn.get_status():
                 TextEngine.scroll(self.search_scrn.get_result(), self.display, -600)
                 self.set_caption(f"{self.NAME} | {self.start_scrn.get_search_value()}")
+                self.bookmarks_group.draw(self.display)
+                self.bookmarks_group.update()
             elif not self.search_scrn.get_status() and threading.active_count() == 1:
                 self.search_scrn.update_surface()
                 self.search_scrn.display_error(self.display)
@@ -109,7 +123,18 @@ class Main:
             if self.search_scrn.go_back():
                 self.search_scrn.reset_search()
                 self.actual_screen = "start"
+                
             
+            self.back_btn_group.draw(self.display)
+
+        elif self.actual_screen == "bookmarks":
+            self.bookmark_scrn.display_title(self.display)
+            self.bookmark_scrn.display_bookmarks(self.display)
+            self.set_caption(f"{self.NAME} | Bookmarks")
+
+            if self.bookmark_scrn.go_back():
+                self.actual_screen = "start"
+
             self.back_btn_group.draw(self.display)
 
     def run(self) -> None:

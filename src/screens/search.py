@@ -5,12 +5,14 @@ import wikipedia
 
 from util.text import TextEngine
 from components.back_btn import BackButton
+from components.bookmark_btn import Bookmarks
 
 class SearchPage:
     def __init__(self, *groups) -> None:
         """ Initializes the search page. The page's screen will have 1200px height, meaning
         this is the most it can display in text."""
-        self.back_btn = BackButton(25, 25, 50, 50, groups)
+        self.back_btn = BackButton(25, 25, 50, 50, groups[0])
+        self.bookmark_btn = Bookmarks(750, 12, 24, 24, groups[1])
 
         self.txt_manager = TextEngine()
         self.txt_manager.set_color("#1c1c1c")
@@ -18,6 +20,7 @@ class SearchPage:
 
         self.color: str = "#fdfdfd"
 
+        self.search_input: str = None
         self.search_page = None
         self.search_text: str = ""
         self.txt_surf: pygame.Surface = pygame.Surface((800, 1200)) # limits to 1200px height to be able to show more text
@@ -27,9 +30,12 @@ class SearchPage:
         self.loading: bool = False
     
     def __check_search(self, txt: str) -> bool:
+        """ Makes a simple validation of the search. The 'txt' argument refer
+        to the search input. """
         try:
             self.search_page = wikipedia.page(txt)
             self.search_text = wikipedia.summary(txt)
+            self.search_input = txt
             self.search_done = True
             return True
         except wikipedia.exceptions.DisambiguationError:
@@ -63,6 +69,9 @@ class SearchPage:
             self.txt_manager.set_font(fsize=16)
             search_surf = self.txt_manager.render_wrap(self.txt_surf, 30)
             self.txt_surf.blit(search_surf, (0, 50))
+
+            # sets the term to be bookmarked
+            self.bookmark_btn.set_search_term(self.search_input)
 
     def display_error(self, display: pygame.Surface) -> None:
         '''In case the search is not successful, shows a generic error message.

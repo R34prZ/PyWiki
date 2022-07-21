@@ -88,11 +88,14 @@ class Button(pygame.sprite.Sprite):
             self.hover = True
         else:
             self.hover = False
+        
+        return self.hover
     
     def check_click(self, button) -> bool:
         '''Checks if the button is being clicked by the cursor. Goes on the event loop under
         MOUSEBUTTONUP event and gets "event.button". It's necessary to reset "self.click" to false
-        somewhere after the action, you can do it on on the "update" method or in the "action" method.'''
+        somewhere after the action, you can do it on on the "update" method or in the "action" method.
+        Mouse buttons: 1 - left click; 2 - right click; 3 - middle click'''
 
         if button == 1 and self.hover:
             self.click = True
@@ -100,7 +103,8 @@ class Button(pygame.sprite.Sprite):
         return self.click
 
     def action(self) -> None:
-        '''Method to be overloaded with the action the button will perform.'''
+        ''' Method to be overloaded with the action the button will perform.
+        Action needs to be constantly updated in order to work. '''
         if self.click:
             print("Click click that's a button!")
             self.click = False

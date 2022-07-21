@@ -36,7 +36,8 @@ I recommend using at least python `3.10`, as `match case` is needed (otherwise y
  - [X] Link the wikipedia search function to the search button
  - [X] Get the wikipedia search result and display it
  - [X] Better process search
- - [ ] Option to favorite results
+ - [X] Option to favorite results
+ - [ ] Clickable bookmarks that act as a link to search
  - [ ] Option to save results locally
  - [ ] Language selection
  

@@ -90,6 +90,7 @@ class Main:
             self.btn_group.draw(self.display)
             self.inp_group.draw(self.display)
             self.start_scrn.display_tip(self.display)
+            self.set_caption(self.NAME)
 
         elif self.actual_screen == "search":
             # display "searching" message before getting the result

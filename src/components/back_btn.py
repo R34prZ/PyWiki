@@ -2,14 +2,15 @@
 
 # back button image (https://icons8.com/icon/84842/back) by icons8 (https://icons8.com)
 
+from util.find_file import find
 from util.button import Button
-import pygame
 
 class BackButton(Button):
     def __init__(self, x: int, y: int, w: int, h: int, *groups) -> None:
         super().__init__(x, y, w, h, groups)
-
-        self.set_image("./images/back.png")
+        
+        self.set_image(find("images/back.png"))
+        
     
     def action(self) -> bool:
         if self.click:

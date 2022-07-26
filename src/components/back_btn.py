@@ -22,4 +22,4 @@ class BackButton(Button):
     def update(self):
         self.check_hover()
         self.scale_on_hover()
-        self.click = False
+        # self.click = False

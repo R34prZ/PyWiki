@@ -6,7 +6,7 @@ from util.find_file import find
 
 class Bookmarks(Button):
     
-    BOOKMARKS: list[str] = []
+    BOOKMARKS: list[str] = ["pygame"]
 
     ICONS = {
         "empty": find("images/bookmark-empty.png"),

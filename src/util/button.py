@@ -64,16 +64,16 @@ class Button(pygame.sprite.Sprite):
             self.image.fill(self.color)
 
     def draw_bordered(self, radius: int = 50) -> None:
-            '''Draws the button with rounded borders.'''
-            img_copy = self.image.copy()
-            img_copy.fill("#000000")
-            img_copy.set_colorkey("#000000")
+        '''Draws the button with rounded borders.'''
+        img_copy = self.image.copy()
+        img_copy.fill("#000000")
+        img_copy.set_colorkey("#000000")
 
-            self.border_radius = radius
-            pygame.draw.rect(img_copy, self.color, (0, 0, *self.rect.size), border_radius = self.border_radius)
+        self.border_radius = radius
+        pygame.draw.rect(img_copy, self.color, (0, 0, *self.rect.size), border_radius = self.border_radius)
 
-            self.image = img_copy
-            self.update_surf()
+        self.image = img_copy
+        self.update_surf()
 
     def update_surf(self) -> None:
         '''Updates the input surface (self.image).'''
@@ -84,10 +84,7 @@ class Button(pygame.sprite.Sprite):
         '''Checks if the button is being hovered by the cursor. Goes on "update" method.'''
         mpos = pygame.mouse.get_pos()
         
-        if self.rect.collidepoint(*mpos):
-            self.hover = True
-        else:
-            self.hover = False
+        self.hover = self.rect.collidepoint(*mpos)
         
         return self.hover
     
@@ -96,9 +93,7 @@ class Button(pygame.sprite.Sprite):
         MOUSEBUTTONUP event and gets "event.button". It's necessary to reset "self.click" to false
         somewhere after the action, you can do it on on the "update" method or in the "action" method.
         Mouse buttons: 1 - left click; 2 - right click; 3 - middle click'''
-
-        if button == 1 and self.hover:
-            self.click = True
+        self.click = button == 1 and self.hover
         
         return self.click
 

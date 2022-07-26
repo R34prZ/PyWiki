@@ -15,7 +15,7 @@ from screens.search import SearchPage
 from screens.bookmarks import BookmarkPage
 
 from util.input_group import InpGroup
-from util.button_group import BtnGroup, BtnGroupSingle
+from util.button_group import BtnGroup
 from util.text import TextEngine
 
 pygame.init()
@@ -136,6 +136,7 @@ class Main:
                 self.actual_screen = "start"
 
             self.back_btn_group.draw(self.display)
+            self.bookmark_scrn.update()
 
     def run(self) -> None:
         while self.running:
@@ -147,7 +148,7 @@ class Main:
                    
             # draw
             self.draw()
-                
+
             # update
             # TODO fix the buttons being clickable on other screens
             self.btn_group.update()

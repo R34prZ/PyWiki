@@ -10,7 +10,7 @@ class SearchInput(Input):
     def get_value(self) -> str:
         if self.text != self.placeholder:
             return self.text
-        return "Pygame"
+        return "pygame"
     
     def update(self) -> None:
         self.draw_bordered()
